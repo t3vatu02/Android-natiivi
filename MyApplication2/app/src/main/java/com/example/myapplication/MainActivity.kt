@@ -1,84 +1,105 @@
-package com.example.myapplication
+package com.example.loginform
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.ui.text.input.KeyboardType
-import com.example.myapplication.ui.theme.MyApplicationTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
-import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HeartRateLimits(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            LoginScreen()
         }
     }
 }
 
 @Composable
-fun HeartRateLimits(modifier: Modifier = Modifier) {
+fun LoginScreen() {
 
-    var ageInput by remember { mutableStateOf("") }
-    val age = ageInput.toIntOrNull() ?: 0
-
-    val upper = if (age > 0) (220 - age) * 0.85f else 0f
-    val lower = if (age > 0) (220 - age) * 0.65f else 0f
-
-    val upperFormatted = String.format(Locale.getDefault(), "%.2f", upper)
-    val lowerFormatted = String.format(Locale.getDefault(), "%.2f", lower)
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
-        modifier = modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center
     ) {
-        TextField(
-            value = ageInput,
-            onValueChange = { ageInput = it },
-            label = { Text(text = stringResource(R.string.age)) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
 
         Text(
-            text = stringResource(
-                R.string.your_heart_rate_limits_are,
-                lowerFormatted,
-                upperFormatted
+            text = "Login",
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color.Green,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Email") },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Green,
+                unfocusedBorderColor = Color.Black,
+                focusedLabelColor = Color.Green,
+                cursorColor = Color.Green
             )
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Green,
+                unfocusedBorderColor = Color.Black,
+                focusedLabelColor = Color.Green,
+                cursorColor = Color.Green
+            )
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { /* Does nothing, as instructed */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Black,
+                contentColor = Color.Green
+            )
+        ) {
+            Text("Submit")
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HeartRateLimitsPreview() {
-    MyApplicationTheme {
-        HeartRateLimits()
-    }
+fun PreviewLoginScreen() {
+    LoginScreen()
 }
